@@ -57,7 +57,7 @@ export default function Navbar() {
       if (!email) return;
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`https://calorie-app-backend.onrender.com//api/user/profile?email=${email}`, {
+        const res = await axios.get(`https://calorie-app-backend.onrender.com/api/user/profile?email=${email}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data.success && res.data.user) {
