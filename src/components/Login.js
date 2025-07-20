@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../utils/authUtils"; // Import to use isAuthenticated for redirection logic
 
 export default function Login() {
   const [step, setStep] = useState("login");
@@ -10,34 +11,35 @@ export default function Login() {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
-  const [rememberMe, setRememberMe] = useState(false); // NEW: State for remember me checkbox
+  const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
 
   // handle login
   const handleLogin = async (e) => {
-  e.preventDefault();
-  setMessage({ type: "", text: "" });
-  try {
-    const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/login", { email, password });
-    if (res.data.success) {
-      setMessage({ type: "success", text: "✅ Login successful! Redirecting..." });
+    e.preventDefault();
+    setMessage({ type: "", text: "" });
+    try {
+      // FIX: Changed absolute URL to relative path for Vercel deployment
+      const res = await axios.post("/login", { email, password });
+      if (res.data.success) {
+        setMessage({ type: "success", text: "✅ Login successful! Redirecting..." });
 
-      // NEW: Store token, email, and name based on rememberMe state
-      const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem("token", res.data.token);
-      storage.setItem("email", res.data.email);
-      storage.setItem("name", res.data.name || "");
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem("token", res.data.token);
+        storage.setItem("email", res.data.email);
+        storage.setItem("name", res.data.name || "");
 
-      setTimeout(() => navigate("/profile"), 1000);
-    } else {
-      setMessage({ type: "error", text: res.data.message });
+        setTimeout(() => navigate("/home"), 1000); // Navigate to home after login
+      } else {
+        setMessage({ type: "error", text: res.data.message });
+      }
+    } catch (err) {
+      console.error("❌ Login error:", err);
+      // Access err.response.data for specific backend error messages
+      setMessage({ type: "error", text: err.response?.data?.message || "❌ Server error during login" });
     }
-  } catch (err) {
-    console.error(err);
-    setMessage({ type: "error", text: "❌ Server error" });
-  }
-};
+  };
 
 
   // send reset OTP
@@ -45,7 +47,8 @@ export default function Login() {
     e.preventDefault();
     setMessage({ type: "", text: "" });
     try {
-      const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/send-reset-otp", { email });
+      // FIX: Changed absolute URL to relative path for Vercel deployment
+      const res = await axios.post("/send-reset-otp", { email });
       if (res.data.success) {
         setMessage({ type: "success", text: "📩 OTP sent to your email" });
         setStep("verifyReset");
@@ -53,8 +56,8 @@ export default function Login() {
         setMessage({ type: "error", text: res.data.message });
       }
     } catch (err) {
-      console.error(err);
-      setMessage({ type: "error", text: "❌ Server error" });
+      console.error("❌ Send OTP error:", err);
+      setMessage({ type: "error", text: err.response?.data?.message || "❌ Server error sending OTP" });
     }
   };
 
@@ -67,7 +70,8 @@ export default function Login() {
       return;
     }
     try {
-      const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/reset-password", {
+      // FIX: Changed absolute URL to relative path for Vercel deployment
+      const res = await axios.post("/reset-password", {
         email,
         otp,
         newPass,
@@ -79,8 +83,8 @@ export default function Login() {
         setMessage({ type: "error", text: res.data.message });
       }
     } catch (err) {
-      console.error(err);
-      setMessage({ type: "error", text: "❌ Server error" });
+      console.error("❌ Reset password error:", err);
+      setMessage({ type: "error", text: err.response?.data?.message || "❌ Server error resetting password" });
     }
   };
 
@@ -118,7 +122,6 @@ export default function Login() {
             required
           />
 
-          {/* NEW: Remember Me checkbox */}
           <div className="flex items-center mb-4">
             <input
               id="remember-me"

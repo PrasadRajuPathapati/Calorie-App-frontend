@@ -154,7 +154,7 @@ export default function Profile() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full max-w-4xl mt-4 p-3 bg-white/40 backdrop-blur-md rounded-xl shadow-xl border border-white/50"
+          className="w-full max-w-6xl mt-4 p-3 bg-white/40 backdrop-blur-md rounded-xl shadow-xl border border-white/50"
         >
           <h1 className="text-3xl font-bold text-green-800 mb-2 text-center">Your Profile</h1>
           <p className="text-green-600 mb-4 text-center">
@@ -173,7 +173,7 @@ export default function Profile() {
 
           {/* Centralized Profile Picture Section */}
           <div className="flex flex-col items-center mb-6">
-              <div className="relative w-36 h-36 rounded-full border-4 border-green-300 shadow-lg overflow-hidden group hover:border-green-500 transition-all duration-300 mb-3">
+              <div className="relative w-50 h-36 rounded-full border-4 border-green-300 shadow-lg overflow-hidden group hover:border-green-500 transition-all duration-300 mb-3">
                 <label htmlFor="profilePicInput" className="cursor-pointer block w-full h-full">
                   {preview ? (
                     <img
