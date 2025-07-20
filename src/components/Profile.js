@@ -36,7 +36,7 @@ export default function Profile() {
 
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`https://calorie-app-backend.onrender.com/api/user/profile?email=${email}`, {
+        const res = await axios.get(`https://calorie-app-backend-d3jb.onrender.com/api/user/profile?email=${email}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -124,7 +124,7 @@ export default function Profile() {
     formData.append("activityLevel", activityLevel);
 
     try {
-      const res = await axios.post("https://calorie-app-backend.onrender.com/save-profile", formData, {
+      const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/save-profile", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.data.success) {

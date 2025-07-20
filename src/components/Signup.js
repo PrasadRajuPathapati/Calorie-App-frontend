@@ -22,7 +22,7 @@ export default function Signup() {
       return;
     }
     try {
-      const res = await axios.post("https://calorie-app-backend.onrender.com/signup", {
+      const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/signup", {
         email,
         password,
       });
@@ -46,7 +46,7 @@ export default function Signup() {
     e.preventDefault();
     setMessage("");
     try {
-      const res = await axios.post("https://calorie-app-backend.onrender.com/verify-otp", {
+      const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/verify-otp", {
         email,
         otp,
       });
