@@ -7,10 +7,3 @@ html, body {
   overflow-x: hidden; /* Prevents horizontal scrolling */
   width: 100%;       /* Ensures content doesn't exceed viewport width */
 }
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden; /* hides scrollbars */
-}
