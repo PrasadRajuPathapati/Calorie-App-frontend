@@ -21,7 +21,7 @@ export default function Login() {
     setMessage({ type: "", text: "" });
     try {
       // FIX: Changed absolute URL to relative path for Vercel deployment
-      const res = await axios.post("/login", { email, password });
+      const res = await axios.post("https://calorie-app-backend-d3jb.onrender.com/login", { email, password });
       if (res.data.success) {
         setMessage({ type: "success", text: "✅ Login successful! Redirecting..." });
 

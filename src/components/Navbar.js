@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 import { clearAuthData, isAuthenticated } from "../utils/authUtils";
 import axios from 'axios';
+import { User, LogOut } from 'lucide-react'; // NEW: Import icons for dropdown
 
 const DEFAULT_PROFILE_PIC_FALLBACK = logo;
 
@@ -12,7 +13,6 @@ export default function Navbar() {
   const [userName, setUserName] = useState("");
   const [userProfilePic, setUserProfilePic] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  // currentTime state is not in Navbar.js
 
   const profileMenuRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -44,12 +44,14 @@ export default function Navbar() {
         if (!email) return;
         try {
           const token = localStorage.getItem('token') || sessionStorage.getItem("token");
+          // FIX: Changed absolute URL to relative path for Vercel deployment
           const res = await axios.get(`/api/user/profile?email=${email}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.data.success && res.data.user) {
             setUserName(res.data.user.name || "");
             if (res.data.user.profilePic) {
+              // FIX: Ensure profilePic URL is also relative, Vercel routes /uploads/(.*)
               setUserProfilePic(`${res.data.user.profilePic}`);
             } else {
               setUserProfilePic(DEFAULT_PROFILE_PIC_FALLBACK);
@@ -125,21 +127,22 @@ export default function Navbar() {
             >
               <div className="px-4 py-2 text-sm text-gray-700 border-b border-green-200">
                 {userName ? `Hi, ${userName}` : 'Hello!'}
-                {/* REMOVED: Email display */}
-                {/* <p className="text-xs text-gray-500">{localStorage.getItem('email') || sessionStorage.getItem('email')}</p> */}
+                {/* Removed email display */}
               </div>
               <Link
                 to="/profile"
                 onClick={() => setShowProfileMenu(false)}
-                className="block px-4 py-2 text-green-700 hover:bg-green-100 transition-colors"
+                className="block px-4 py-2 text-green-700 hover:bg-green-100 transition-colors flex items-center space-x-2" // Added flex for icon alignment
               >
-                Manage Profile
+                <User size={16} /> {/* NEW: Profile Icon */}
+                <span>Manage Profile</span>
               </Link>
               <button
                 onClick={handleSignOut}
-                className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 transition-colors border-t border-green-200 mt-2 pt-2"
+                className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 transition-colors border-t border-green-200 mt-2 pt-2 flex items-center space-x-2" // Added flex for icon alignment
               >
-                Sign Out
+                <LogOut size={16} /> {/* NEW: Sign Out Icon */}
+                <span>Sign Out</span>
               </button>
             </motion.div>
           )}
