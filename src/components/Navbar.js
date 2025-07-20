@@ -12,26 +12,13 @@ export default function Navbar() {
   const [userName, setUserName] = useState("");
   const [userProfilePic, setUserProfilePic] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  // REMOVED: currentTime state
-  // const [currentTime, setCurrentTime] = useState(new Date()); 
+  // currentTime state is not in Navbar.js as per previous changes
 
   const profileMenuRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // REMOVED: Effect to update time every second
-  /*
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-  */
-
-  useEffect(() => {
+    // Removed: Effect to update time every second from Navbar.js
     const handleClickOutside = (event) => {
       if (
         profileMenuRef.current && !profileMenuRef.current.contains(event.target) &&
@@ -57,13 +44,15 @@ export default function Navbar() {
       if (!email) return;
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`https://calorie-app-backend-d3jb.onrender.com/api/user/profile?email=${email}`, {
+        // FIX: Changed absolute URL to relative path for Vercel deployment
+        const res = await axios.get(`/api/user/profile?email=${email}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data.success && res.data.user) {
           setUserName(res.data.user.name || "");
           if (res.data.user.profilePic) {
-            setUserProfilePic(`https://calorie-app-backend-d3jb.onrender.com/${res.data.user.profilePic}`);
+            // FIX: Ensure profilePic URL is also relative, Vercel routes /uploads/(.*)
+            setUserProfilePic(`${res.data.user.profilePic}`);
           } else {
             setUserProfilePic(DEFAULT_PROFILE_PIC_FALLBACK);
           }
@@ -99,7 +88,6 @@ export default function Navbar() {
             <h1 className="text-2xl md:text-3xl font-extrabold text-green-900 drop-shadow-sm leading-tight mb-0">
               CalorieApp
             </h1>
-            {/* REMOVED: Date and Time Display from here */}
           </div>
         </Link>
       </div>
